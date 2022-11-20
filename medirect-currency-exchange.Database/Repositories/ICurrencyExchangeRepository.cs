@@ -1,4 +1,4 @@
-﻿namespace medirect_currency_exchange.Repositories
+﻿namespace medirect_currency_exchange.Database.Repositories
 {
 	public interface ICurrencyExchangeRepository
 	{

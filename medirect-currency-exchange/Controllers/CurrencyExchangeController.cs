@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using medirect_currency_exchange.Models.DTO;
-using medirect_currency_exchange.Repositories;
+using medirect_currency_exchange.Contracts;
+using medirect_currency_exchange.Database.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace medirect_currency_exchange.Controllers

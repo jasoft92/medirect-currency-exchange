@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace medirectcurrencyexchange.Migrations
+namespace medirectcurrencyexchange.Database.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

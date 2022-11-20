@@ -1,7 +1,6 @@
-﻿using medirect_currency_exchange.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using medirect_currency_exchange.Database.Context;
 
-namespace medirect_currency_exchange.Repositories
+namespace medirect_currency_exchange.Database.Repositories
 {
 	public class CurrencyExchangeRepository : ICurrencyExchangeRepository
 	{
@@ -14,7 +13,7 @@ namespace medirect_currency_exchange.Repositories
 
 		public async Task<int> RecordCurrencyExchangeTrade()
 		{
-			await _dbcontext.Customers.ToListAsync();
+			//await _dbcontext.Customers.ToListAsync();
 			return 1;
 		}
 	}

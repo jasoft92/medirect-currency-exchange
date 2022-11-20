@@ -1,4 +1,4 @@
-﻿namespace medirect_currency_exchange.Models.Domain
+﻿namespace medirect_currency_exchange.Domain.Models
 {
 	public class Customer
 	{

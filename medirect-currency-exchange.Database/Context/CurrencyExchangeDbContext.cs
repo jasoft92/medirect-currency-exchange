@@ -1,7 +1,7 @@
-﻿using medirect_currency_exchange.Models.Domain;
+﻿using medirect_currency_exchange.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace medirect_currency_exchange.Data
+namespace medirect_currency_exchange.Database.Context
 {
 	public class CurrencyExchangeDbContext : DbContext
 	{

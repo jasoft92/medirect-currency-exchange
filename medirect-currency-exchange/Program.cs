@@ -1,5 +1,5 @@
-using medirect_currency_exchange.Data;
-using medirect_currency_exchange.Repositories;
+using medirect_currency_exchange.Database.Context;
+using medirect_currency_exchange.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

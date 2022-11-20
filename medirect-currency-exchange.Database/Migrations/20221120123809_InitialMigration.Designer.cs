@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using medirect_currency_exchange.Data;
+using medirect_currency_exchange.Database.Context;
 
 #nullable disable
 
-namespace medirectcurrencyexchange.Migrations
+namespace medirectcurrencyexchange.Database.Migrations
 {
     [DbContext(typeof(CurrencyExchangeDbContext))]
-    [Migration("20221119224910_InitialMigration")]
+    [Migration("20221120123809_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace medirectcurrencyexchange.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("medirect_currency_exchange.Models.Domain.CurrencyExchangeHistory", b =>
+            modelBuilder.Entity("medirect_currency_exchange.Domain.Models.CurrencyExchangeHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +65,7 @@ namespace medirectcurrencyexchange.Migrations
                     b.ToTable("CurrencyExchangeHistories");
                 });
 
-            modelBuilder.Entity("medirect_currency_exchange.Models.Domain.Customer", b =>
+            modelBuilder.Entity("medirect_currency_exchange.Domain.Models.Customer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -95,7 +95,7 @@ namespace medirectcurrencyexchange.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("medirect_currency_exchange.Models.Domain.CustomerWallet", b =>
+            modelBuilder.Entity("medirect_currency_exchange.Domain.Models.CustomerWallet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,23 +121,23 @@ namespace medirectcurrencyexchange.Migrations
                     b.ToTable("CustomerWallets");
                 });
 
-            modelBuilder.Entity("medirect_currency_exchange.Models.Domain.CurrencyExchangeHistory", b =>
+            modelBuilder.Entity("medirect_currency_exchange.Domain.Models.CurrencyExchangeHistory", b =>
                 {
-                    b.HasOne("medirect_currency_exchange.Models.Domain.Customer", "Customer")
+                    b.HasOne("medirect_currency_exchange.Domain.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("medirect_currency_exchange.Models.Domain.CustomerWallet", "SourceWallet")
+                    b.HasOne("medirect_currency_exchange.Domain.Models.CustomerWallet", "SourceWallet")
                         .WithOne()
-                        .HasForeignKey("medirect_currency_exchange.Models.Domain.CurrencyExchangeHistory", "SourceWalletId")
+                        .HasForeignKey("medirect_currency_exchange.Domain.Models.CurrencyExchangeHistory", "SourceWalletId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("medirect_currency_exchange.Models.Domain.CustomerWallet", "TargetWallet")
+                    b.HasOne("medirect_currency_exchange.Domain.Models.CustomerWallet", "TargetWallet")
                         .WithOne()
-                        .HasForeignKey("medirect_currency_exchange.Models.Domain.CurrencyExchangeHistory", "TargetWalletId")
+                        .HasForeignKey("medirect_currency_exchange.Domain.Models.CurrencyExchangeHistory", "TargetWalletId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -148,9 +148,9 @@ namespace medirectcurrencyexchange.Migrations
                     b.Navigation("TargetWallet");
                 });
 
-            modelBuilder.Entity("medirect_currency_exchange.Models.Domain.CustomerWallet", b =>
+            modelBuilder.Entity("medirect_currency_exchange.Domain.Models.CustomerWallet", b =>
                 {
-                    b.HasOne("medirect_currency_exchange.Models.Domain.Customer", "Customer")
+                    b.HasOne("medirect_currency_exchange.Domain.Models.Customer", "Customer")
                         .WithMany("Wallets")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -159,7 +159,7 @@ namespace medirectcurrencyexchange.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("medirect_currency_exchange.Models.Domain.Customer", b =>
+            modelBuilder.Entity("medirect_currency_exchange.Domain.Models.Customer", b =>
                 {
                     b.Navigation("Wallets");
                 });
