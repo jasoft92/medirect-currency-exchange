@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using medirect_currency_exchange.Domain.DTOs;
 
 namespace medirect_currency_exchange.Application.Services
 {
-	internal class ICurrencyExchangeService
+	public interface ICurrencyExchangeService
 	{
+		Task<decimal> ProcessExchange(CurrencyExchangeDto currencyExchangeDto);
 	}
 }

@@ -1,4 +1,6 @@
 ﻿using medirect_currency_exchange.Database.Context;
+using medirect_currency_exchange.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace medirect_currency_exchange.Database.Repositories
 {
@@ -11,10 +13,21 @@ namespace medirect_currency_exchange.Database.Repositories
 			_dbcontext = dbcontext;
 		}
 
-		public async Task<int> RecordCurrencyExchangeTrade()
+		public async Task<List<CustomerWallet?>> GetCustomerWallets(Guid customerId)
 		{
-			//await _dbcontext.Customers.ToListAsync();
-			return 1;
+			return await _dbcontext.CustomerWallets.Where(cw => cw.CustomerId == customerId).ToListAsync();
+		}
+
+		public async Task<CurrencyExchangeTransaction> AddCurrencyExchangeHistory(CurrencyExchangeTransaction currencyExchangeTransaction)
+		{
+			await _dbcontext.AddAsync(currencyExchangeTransaction);
+			await _dbcontext.SaveChangesAsync();
+			return currencyExchangeTransaction;
+		}
+
+		public async Task SaveChangesAsync()
+		{
+			await _dbcontext.SaveChangesAsync();
 		}
 	}
 }

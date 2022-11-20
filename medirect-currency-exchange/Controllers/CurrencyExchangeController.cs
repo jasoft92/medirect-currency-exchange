@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using medirect_currency_exchange.Application.Clients;
+using medirect_currency_exchange.Application.Services;
 using medirect_currency_exchange.Contracts;
-using medirect_currency_exchange.Database.Repositories;
+using medirect_currency_exchange.Domain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace medirect_currency_exchange.Controllers
@@ -10,21 +10,20 @@ namespace medirect_currency_exchange.Controllers
 	[Route("[controller]")]
 	public class CurrencyExchangeController : Controller
 	{
-		private readonly ICurrencyExchangeRepository _currencyExchangeRepository;
 		private readonly IMapper _mapper;
+		private readonly ICurrencyExchangeService _currencyExchangeService;
 
-		public CurrencyExchangeController(ICurrencyExchangeRepository currencyExchangeRepository, IMapper mapper)
+		public CurrencyExchangeController(IMapper mapper, ICurrencyExchangeService currencyExchangeService)
 		{
-			_currencyExchangeRepository = currencyExchangeRepository;
 			_mapper = mapper;
+			_currencyExchangeService = currencyExchangeService;
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Trade(CurrencyExchangeRequest request)
 		{
-			ExchangeRateApiClient ers = new ExchangeRateApiClient();
-			var res = await ers.GetExchangeRate("EUR", "GBP");
-			return null;
+			await _currencyExchangeService.ProcessExchange(_mapper.Map<CurrencyExchangeDto>(request));
+			return Ok();
 		}
 
 	}

@@ -7,26 +7,12 @@ namespace medirect_currency_exchange.Database.Context
 	{
 		public CurrencyExchangeDbContext(DbContextOptions<CurrencyExchangeDbContext> options) : base(options)
 		{
-			
+
 		}
-		
+
 		public DbSet<Customer> Customers { get; set; }
-		public DbSet<CustomerWallet> CustomerWallets { get; set; }
-		public DbSet<CurrencyExchangeHistory> CurrencyExchangeHistories { get; set; }
-
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			modelBuilder.Entity<CurrencyExchangeHistory>()
-				.HasOne(s => s.SourceWallet)
-				.WithOne()
-				.OnDelete(DeleteBehavior.Restrict);
-
-
-			modelBuilder.Entity<CurrencyExchangeHistory>()
-				.HasOne(s => s.TargetWallet)
-				.WithOne()
-				.OnDelete(DeleteBehavior.Restrict);
-		}
+		public DbSet<CustomerWallet?> CustomerWallets { get; set; }
+		public DbSet<CurrencyExchangeTransaction> CurrencyExchangeTransactions { get; set; }
 
 	}
 }

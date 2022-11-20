@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -18,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\medirect-currency-exchange.Application\medirect-currency-exchange.Application.csproj" />
-    <ProjectReference Include="..\medirect-currency-exchange.Contracts\medirect-currency-exchange.Contracts.csproj" />
     <ProjectReference Include="..\medirect-currency-exchange.Database\medirect-currency-exchange.Database.csproj" />
   </ItemGroup>
 

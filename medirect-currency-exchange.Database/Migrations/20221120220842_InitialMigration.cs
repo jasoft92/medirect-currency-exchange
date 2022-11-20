@@ -28,6 +28,30 @@ namespace medirectcurrencyexchange.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CurrencyExchangeTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FromCurrencyCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SourceAmount = table.Column<decimal>(type: "decimal(18,5)", nullable: false),
+                    ToCurrencyCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConvertedAmount = table.Column<decimal>(type: "decimal(18,5)", nullable: false),
+                    ExchangeRate = table.Column<decimal>(type: "decimal(18,5)", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CurrencyExchangeTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CurrencyExchangeTransactions_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CustomerWallets",
                 columns: table => new
                 {
@@ -48,58 +72,10 @@ namespace medirectcurrencyexchange.Database.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "CurrencyExchangeHistories",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SourceWalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SourceAmount = table.Column<decimal>(type: "decimal(18,5)", nullable: false),
-                    TargetWalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TargetAmount = table.Column<decimal>(type: "decimal(18,5)", nullable: false),
-                    ExchangeRate = table.Column<decimal>(type: "decimal(18,5)", nullable: false),
-                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CurrencyExchangeHistories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CurrencyExchangeHistories_CustomerWallets_SourceWalletId",
-                        column: x => x.SourceWalletId,
-                        principalTable: "CustomerWallets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CurrencyExchangeHistories_CustomerWallets_TargetWalletId",
-                        column: x => x.TargetWalletId,
-                        principalTable: "CustomerWallets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CurrencyExchangeHistories_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_CurrencyExchangeHistories_CustomerId",
-                table: "CurrencyExchangeHistories",
+                name: "IX_CurrencyExchangeTransactions_CustomerId",
+                table: "CurrencyExchangeTransactions",
                 column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CurrencyExchangeHistories_SourceWalletId",
-                table: "CurrencyExchangeHistories",
-                column: "SourceWalletId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CurrencyExchangeHistories_TargetWalletId",
-                table: "CurrencyExchangeHistories",
-                column: "TargetWalletId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomerWallets_CustomerId",
@@ -111,7 +87,7 @@ namespace medirectcurrencyexchange.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CurrencyExchangeHistories");
+                name: "CurrencyExchangeTransactions");
 
             migrationBuilder.DropTable(
                 name: "CustomerWallets");

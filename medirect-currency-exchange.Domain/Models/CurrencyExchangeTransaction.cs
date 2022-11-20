@@ -1,27 +1,29 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace medirect_currency_exchange.Domain.Models
 {
-	public class CurrencyExchangeHistory
+	public class CurrencyExchangeTransaction
 	{
 		public Guid Id { get; set; }
 		[ForeignKey("Customer")]
 		public Guid CustomerId { get; set; }
-		[ForeignKey("SourceWallet")]
-		public Guid SourceWalletId { get; set; }
+		public string FromCurrencyCode { get; set; }
 		[Column(TypeName = "decimal(18,5)")]
 		public decimal SourceAmount { get; set; }
-		[ForeignKey("TargetWallet")]
-		public Guid TargetWalletId { get; set; }
+		public string ToCurrencyCode { get; set; }
 		[Column(TypeName = "decimal(18,5)")]
-		public decimal TargetAmount { get; set; }
+		public decimal ConvertedAmount { get; set; }
 		[Column(TypeName = "decimal(18,5)")]
 		public decimal ExchangeRate { get; set; }
 		public DateTime TimeStamp { get; set; }
 
+
 		//Navigation
 		public Customer Customer { get; set; }
-		public CustomerWallet SourceWallet { get; set; }
-		public CustomerWallet TargetWallet { get; set; }
 	}
 }

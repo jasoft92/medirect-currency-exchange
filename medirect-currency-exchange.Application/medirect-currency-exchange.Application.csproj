@@ -12,4 +12,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\medirect-currency-exchange.Contracts\medirect-currency-exchange.Contracts.csproj" />
+    <ProjectReference Include="..\medirect-currency-exchange.Database\medirect-currency-exchange.Database.csproj" />
+  </ItemGroup>
+
 </Project>
