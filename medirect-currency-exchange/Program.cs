@@ -1,4 +1,5 @@
 using medirect_currency_exchange.Data;
+using medirect_currency_exchange.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<CurrencyExchangeDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CurrencyExchangeDbConnectionString")));
+
+builder.Services.AddScoped<ICurrencyExchangeRepository, CurrencyExchangeRepository>();
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 

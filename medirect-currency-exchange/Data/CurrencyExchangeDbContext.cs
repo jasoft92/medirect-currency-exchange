@@ -10,9 +10,9 @@ namespace medirect_currency_exchange.Data
 			
 		}
 		
-		DbSet<Customer> Customers { get; set; }
-		DbSet<CustomerWallet> CustomerWallets { get; set; }
-		DbSet<CurrencyExchangeHistory> CurrencyExchangeHistories { get; set; }
+		public DbSet<Customer> Customers { get; set; }
+		public DbSet<CustomerWallet> CustomerWallets { get; set; }
+		public DbSet<CurrencyExchangeHistory> CurrencyExchangeHistories { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
