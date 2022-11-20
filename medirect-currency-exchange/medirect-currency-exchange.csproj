@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\medirect-currency-exchange.Application\medirect-currency-exchange.Application.csproj" />
     <ProjectReference Include="..\medirect-currency-exchange.Contracts\medirect-currency-exchange.Contracts.csproj" />
     <ProjectReference Include="..\medirect-currency-exchange.Database\medirect-currency-exchange.Database.csproj" />
   </ItemGroup>
