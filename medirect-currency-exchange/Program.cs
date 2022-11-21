@@ -1,5 +1,9 @@
+﻿using AutoMapper;
+using medirect_currency_exchange.Application.Clients;
+using medirect_currency_exchange.Application.Services;
 using medirect_currency_exchange.Database.Context;
 using medirect_currency_exchange.Database.Repositories;
+using medirect_currency_exchange.Domain.Profiles;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +18,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CurrencyExchangeDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CurrencyExchangeDbConnectionString")));
 
 builder.Services.AddScoped<ICurrencyExchangeRepository, CurrencyExchangeRepository>();
+builder.Services.AddScoped<ICurrencyExchangeService, CurrencyExchangeService>();
+builder.Services.AddScoped<IExchangeRateApiClient, ExchangeRateApiClient>();
 
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddMemoryCache();
+
+var config = new MapperConfiguration(cfg =>
+{
+	cfg.AddProfile(new CurrencyExchangeProfile());
+});
+var mapper = config.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 

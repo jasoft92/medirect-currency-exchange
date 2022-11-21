@@ -24,24 +24,26 @@ namespace medirect_currency_exchange.Application.Services
 			var wallets = await _currencyExchangeRepository.GetCustomerWallets(currencyExchangeDto.CustomerId);
 
 			var sourceWallet = wallets.SingleOrDefault(w => w.CurrencyCode == currencyExchangeDto.SourceCurrency);
-			var targetWallet = wallets.SingleOrDefault(w => w.CurrencyCode == currencyExchangeDto.SourceCurrency);
+			var targetWallet = wallets.SingleOrDefault(w => w.CurrencyCode == currencyExchangeDto.TargetCurrency);
 
 			//TODO Validate - If client has wallet account with source currency
 			//TODO Validate - Amount (available in client's accounts)
 
-			var convertedAmount = await ProcessInternalAsync(
+			var exchangeRate = await GetExchangeRate(
 				currencyFrom: currencyExchangeDto.SourceCurrency,
-				currencyTo: currencyExchangeDto.SourceCurrency,
+				currencyTo: currencyExchangeDto.TargetCurrency,
 				amount: currencyExchangeDto.ExchangeAmount);
-			
+
+			var convertedAmount = CalculateConversion(exchangeRate, currencyExchangeDto.ExchangeAmount);
+
 			await UpdateCustomerWalletInformation(sourceWallet, currencyExchangeDto.ExchangeAmount, targetWallet, convertedAmount);
-			await SaveExchangeTradeInformation(currencyExchangeDto, convertedAmount);
+			await SaveExchangeTradeInformation(currencyExchangeDto, exchangeRate, convertedAmount);
 
 			return convertedAmount;
 		}
 
 
-		private async Task<decimal> ProcessInternalAsync(string currencyFrom, string currencyTo, decimal amount)
+		private async Task<decimal> GetExchangeRate(string currencyFrom, string currencyTo, decimal amount)
 		{
 			var key = currencyFrom + currencyTo;
 
@@ -54,17 +56,20 @@ namespace medirect_currency_exchange.Application.Services
 				_memoryCache.Set(key, exchangeRate, cacheEntryOptions);
 			}
 
-			return CalculateConversion(exchangeRate, amount);
+			return exchangeRate;
 		}
 
 		private async Task UpdateCustomerWalletInformation(CustomerWallet sourceWallet, decimal originalAmount, CustomerWallet targetWallet, decimal convertedAmount)
 		{
+			var dateNow = DateTime.Now;
 			sourceWallet.Amount -= originalAmount;
+			targetWallet.LastModified = dateNow;
 			targetWallet.Amount += convertedAmount;
+			targetWallet.LastModified = dateNow;
 			await _currencyExchangeRepository.SaveChangesAsync();
 		}
 
-		private async Task SaveExchangeTradeInformation(CurrencyExchangeDto currencyExchangeDto, decimal convertedAmount)
+		private async Task SaveExchangeTradeInformation(CurrencyExchangeDto currencyExchangeDto, decimal exchangeRate, decimal convertedAmount)
 		{
 			await _currencyExchangeRepository.AddCurrencyExchangeHistory(new CurrencyExchangeTransaction
 			{
@@ -72,7 +77,9 @@ namespace medirect_currency_exchange.Application.Services
 				FromCurrencyCode = currencyExchangeDto.SourceCurrency,
 				SourceAmount = currencyExchangeDto.ExchangeAmount,
 				ToCurrencyCode = currencyExchangeDto.TargetCurrency,
-				ConvertedAmount = convertedAmount
+				ConvertedAmount = convertedAmount,
+				ExchangeRate = exchangeRate,
+				TimeStamp = DateTime.Now
 			});
 		}
 

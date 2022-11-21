@@ -13,7 +13,7 @@ namespace medirect_currency_exchange.Database.Repositories
 			_dbcontext = dbcontext;
 		}
 
-		public async Task<List<CustomerWallet?>> GetCustomerWallets(Guid customerId)
+		public async Task<List<CustomerWallet?>> GetCustomerWallets(double customerId)
 		{
 			return await _dbcontext.CustomerWallets.Where(cw => cw.CustomerId == customerId).ToListAsync();
 		}

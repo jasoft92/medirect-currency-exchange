@@ -2,7 +2,7 @@
 {
 	public class CurrencyExchangeDto
 	{
-		public Guid CustomerId { get; set; }
+		public double CustomerId { get; set; }
 		
 		public string SourceCurrency { get; set; }
 		

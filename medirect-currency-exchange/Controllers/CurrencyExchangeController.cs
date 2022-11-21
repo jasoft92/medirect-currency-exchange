@@ -22,7 +22,7 @@ namespace medirect_currency_exchange.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Trade(CurrencyExchangeRequest request)
 		{
-			await _currencyExchangeService.ProcessExchange(_mapper.Map<CurrencyExchangeDto>(request));
+			await _currencyExchangeService.ProcessExchange(_mapper.Map<CurrencyExchangeRequest, CurrencyExchangeDto>(request));
 			return Ok();
 		}
 

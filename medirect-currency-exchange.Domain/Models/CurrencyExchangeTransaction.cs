@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace medirect_currency_exchange.Domain.Models
 {
@@ -11,7 +6,7 @@ namespace medirect_currency_exchange.Domain.Models
 	{
 		public Guid Id { get; set; }
 		[ForeignKey("Customer")]
-		public Guid CustomerId { get; set; }
+		public double CustomerId { get; set; }
 		public string FromCurrencyCode { get; set; }
 		[Column(TypeName = "decimal(18,5)")]
 		public decimal SourceAmount { get; set; }
@@ -23,7 +18,6 @@ namespace medirect_currency_exchange.Domain.Models
 		public DateTime TimeStamp { get; set; }
 
 
-		//Navigation
 		public Customer Customer { get; set; }
 	}
 }

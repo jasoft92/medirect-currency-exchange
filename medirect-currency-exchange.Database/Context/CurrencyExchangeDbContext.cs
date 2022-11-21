@@ -14,5 +14,22 @@ namespace medirect_currency_exchange.Database.Context
 		public DbSet<CustomerWallet?> CustomerWallets { get; set; }
 		public DbSet<CurrencyExchangeTransaction> CurrencyExchangeTransactions { get; set; }
 
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+
+			modelBuilder.Entity<Customer>()
+				.HasKey(m => m.Id);
+
+			modelBuilder.Entity<CustomerWallet>()
+				.HasKey(m => new { m.CustomerId, m.CurrencyCode});
+
+			modelBuilder.Entity<CurrencyExchangeTransaction>()
+				.HasKey(m => m.Id);
+
+			modelBuilder.Entity<CurrencyExchangeTransaction>()
+				.Property(p=>p.Id)
+				.ValueGeneratedOnAdd();
+		}
+
 	}
 }

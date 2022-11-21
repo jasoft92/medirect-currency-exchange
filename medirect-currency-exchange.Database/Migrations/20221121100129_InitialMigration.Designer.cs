@@ -12,7 +12,7 @@ using medirect_currency_exchange.Database.Context;
 namespace medirectcurrencyexchange.Database.Migrations
 {
     [DbContext(typeof(CurrencyExchangeDbContext))]
-    [Migration("20221120220842_InitialMigration")]
+    [Migration("20221121100129_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -34,8 +34,8 @@ namespace medirectcurrencyexchange.Database.Migrations
                     b.Property<decimal>("ConvertedAmount")
                         .HasColumnType("decimal(18,5)");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<double>("CustomerId")
+                        .HasColumnType("float");
 
                     b.Property<decimal>("ExchangeRate")
                         .HasColumnType("decimal(18,5)");
@@ -63,9 +63,8 @@ namespace medirectcurrencyexchange.Database.Migrations
 
             modelBuilder.Entity("medirect_currency_exchange.Domain.Models.Customer", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<double>("Id")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
@@ -93,26 +92,19 @@ namespace medirectcurrencyexchange.Database.Migrations
 
             modelBuilder.Entity("medirect_currency_exchange.Domain.Models.CustomerWallet", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<double>("CustomerId")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CurrencyCode")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,5)");
 
-                    b.Property<string>("CurrencyCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
+                    b.HasKey("CustomerId", "CurrencyCode");
 
                     b.ToTable("CustomerWallets");
                 });
