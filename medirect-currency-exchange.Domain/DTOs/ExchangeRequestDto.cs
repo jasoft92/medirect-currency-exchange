@@ -2,7 +2,7 @@
 {
 	public class ExchangeRequestDto
 	{
-		public double CustomerId { get; }
+		public long CustomerId { get; }
 
 		public string SourceCurrency { get; }
 
@@ -10,7 +10,7 @@
 
 		public decimal ExchangeAmount { get; }
 		
-		public ExchangeRequestDto(double customerId, string sourceCurrency, string targetCurrency, decimal exchangeAmount)
+		public ExchangeRequestDto(long customerId, string sourceCurrency, string targetCurrency, decimal exchangeAmount)
 		{
 			CustomerId = customerId;
 			SourceCurrency = sourceCurrency;

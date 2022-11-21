@@ -1,11 +1,8 @@
-﻿using System.Net;
-using medirect_currency_exchange.Contracts;
-
-namespace medirect_currency_exchange.Domain.DTOs
+﻿namespace medirect_currency_exchange.Domain.DTOs
 {
 	public class ExchangeResponseDto
 	{
-		public double CustomerId { get; }
+		public long CustomerId { get; }
 
 		public decimal SourceAccountBalance { get; }
 
@@ -17,7 +14,7 @@ namespace medirect_currency_exchange.Domain.DTOs
 
 		public decimal ExchangeAmount { get; }
 
-		public ExchangeResponseDto(double customerId, decimal sourceAccountBalance, string sourceCurrencyCode, decimal targetAccountBalance, string targetCurrencyCode, decimal exchangeAmount)
+		public ExchangeResponseDto(long customerId, decimal sourceAccountBalance, string sourceCurrencyCode, decimal targetAccountBalance, string targetCurrencyCode, decimal exchangeAmount)
 		{
 			CustomerId = customerId;
 			SourceAccountBalance = sourceAccountBalance;

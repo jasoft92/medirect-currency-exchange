@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System.Net;
+using Newtonsoft.Json;
 using medirect_currency_exchange.Application.Clients.Models;
+using medirect_currency_exchange.Contracts;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace medirect_currency_exchange.Application.Clients
 {
@@ -16,25 +19,25 @@ namespace medirect_currency_exchange.Application.Clients
 				DefaultRequestHeaders = { { "apikey", "WdopSdwXLg67GbYzfS2JQ8bfmIx40FfL" } }
 			};
 		}
-		public async Task<decimal> GetExchangeRate(string currencyFrom, string currencyTo)
+		public async Task<Tuple<decimal?, ErrorResponse?>> GetExchangeRate(string currencyFrom, string currencyTo)
 		{
-
 			var url = _httpClient.BaseAddress + $"convert?to={currencyTo}&from={currencyFrom}&amount=1";
-			var response = await _httpClient.GetAsync(url);
-			return await ParseResponse(response);
-		}
+			var httpResponse = await _httpClient.GetAsync(url);
+			var resultContent = await httpResponse.Content.ReadAsStringAsync();
 
-		private async Task<decimal> ParseResponse(HttpResponseMessage response)
-		{
-			if (!response.IsSuccessStatusCode)
+			if (!httpResponse.IsSuccessStatusCode)
 			{
-				//TODO Error
+				var error = JsonConvert.DeserializeObject<RateApiError>(resultContent);
+				return new Tuple<decimal?, ErrorResponse?>(
+					item1: null,
+					item2: new ErrorResponse(HttpStatusCode.BadRequest, error?.ErrorDetails.Message ?? ""));
 			}
 
-			var resultContent = await response.Content.ReadAsStringAsync();
-	
-			var result = JsonConvert.DeserializeObject<RateClientResponse>(resultContent);
-			return result?.Rate ?? -1;
+			var rate = JsonConvert.DeserializeObject<RateClientResponse>(resultContent).Rate;
+
+			return new Tuple<decimal?, ErrorResponse?>(
+				item1: rate,
+				item2: null);
 		}
 	}
 }

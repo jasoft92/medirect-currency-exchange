@@ -21,7 +21,7 @@ namespace medirect_currency_exchange.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Trade(CurrencyExchangeRequest request)
+		public async Task<IActionResult> Exchange(CurrencyExchangeRequest request)
 		{
 			try
 			{

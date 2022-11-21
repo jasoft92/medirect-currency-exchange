@@ -5,6 +5,6 @@ namespace medirect_currency_exchange.Application.Services
 {
 	public interface ICurrencyExchangeService
 	{
-		Task<CurrencyExchangeProcessingResult> ProcessExchange(ExchangeRequestDto currencyExchangeDto);
+		Task<CurrencyExchangeProcessingResult> ProcessExchange(ExchangeRequestDto exchangeRequestDto);
 	}
 }

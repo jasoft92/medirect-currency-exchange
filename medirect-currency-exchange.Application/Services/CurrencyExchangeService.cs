@@ -1,4 +1,6 @@
-﻿using medirect_currency_exchange.Application.Clients;
+﻿using System.Net;
+using medirect_currency_exchange.Application.Clients;
+using medirect_currency_exchange.Contracts;
 using medirect_currency_exchange.Database.Repositories;
 using medirect_currency_exchange.Domain;
 using medirect_currency_exchange.Domain.DTOs;
@@ -20,30 +22,39 @@ namespace medirect_currency_exchange.Application.Services
 			_currencyExchangeRepository = currencyExchangeRepository;
 		}
 
-		public async Task<CurrencyExchangeProcessingResult> ProcessExchange(ExchangeRequestDto currencyExchangeDto)
+		public async Task<CurrencyExchangeProcessingResult> ProcessExchange(ExchangeRequestDto exchangeRequestDto)
 		{
-			var wallets = await _currencyExchangeRepository.GetCustomerWallets(currencyExchangeDto.CustomerId);
+			var wallets = await _currencyExchangeRepository.GetCustomerWallets(exchangeRequestDto.CustomerId);
 
-			var sourceWallet = wallets.SingleOrDefault(w => w.CurrencyCode == currencyExchangeDto.SourceCurrency);
-			var targetWallet = wallets.SingleOrDefault(w => w.CurrencyCode == currencyExchangeDto.TargetCurrency);
+			var sourceWallet = wallets.SingleOrDefault(w => w.CurrencyCode == exchangeRequestDto.SourceCurrency);
+			var targetWallet = wallets.SingleOrDefault(w => w.CurrencyCode == exchangeRequestDto.TargetCurrency);
 
-			//TODO Validate - If client has wallet account with source currency
-			//TODO Validate - Amount (available in client's accounts)
+
+			var validationErrors = await ValidateRequest(exchangeRequestDto, sourceWallet);
+
+			if (validationErrors != null)
+				return CurrencyExchangeProcessingResult.Create(null, validationErrors);
 
 			var exchangeRate = await GetExchangeRate(
-				currencyFrom: currencyExchangeDto.SourceCurrency,
-				currencyTo: currencyExchangeDto.TargetCurrency,
-				amount: currencyExchangeDto.ExchangeAmount);
+				currencyFrom: exchangeRequestDto.SourceCurrency,
+				currencyTo: exchangeRequestDto.TargetCurrency);
 
-			var convertedAmount = CalculateConversion(exchangeRate, currencyExchangeDto.ExchangeAmount);
+			//TODO ValidateExchangeRate Validity
 
-			await UpdateCustomerWalletInformation(sourceWallet, currencyExchangeDto.ExchangeAmount, targetWallet, convertedAmount);
-			await SaveExchangeTradeInformation(currencyExchangeDto, exchangeRate, convertedAmount);
+			targetWallet ??= await _currencyExchangeRepository.AddCustomerWallet(new CustomerWallet
+			{
+				CustomerId = exchangeRequestDto.CustomerId,
+				Amount = 0,
+				CurrencyCode = exchangeRequestDto.TargetCurrency
+			});
 
-			//return convertedAmount;
+			var convertedAmount = CalculateConversion(exchangeRate, exchangeRequestDto.ExchangeAmount);
+
+			await UpdateCustomerWalletInformation(sourceWallet, exchangeRequestDto.ExchangeAmount, targetWallet, convertedAmount);
+			await SaveExchangeTradeInformation(exchangeRequestDto, exchangeRate, convertedAmount);
 
 			return CurrencyExchangeProcessingResult.Create(new ExchangeResponseDto(
-					customerId: currencyExchangeDto.CustomerId,
+					customerId: exchangeRequestDto.CustomerId,
 					sourceAccountBalance: sourceWallet.Amount,
 					sourceCurrencyCode: sourceWallet.CurrencyCode,
 					targetAccountBalance: targetWallet.Amount,
@@ -52,7 +63,23 @@ namespace medirect_currency_exchange.Application.Services
 		}
 
 
-		private async Task<decimal> GetExchangeRate(string currencyFrom, string currencyTo, decimal amount)
+		private async Task<ErrorResponse?> ValidateRequest(ExchangeRequestDto exchangeRequestDto, CustomerWallet? customerWallet)
+		{
+			if (customerWallet == null)
+			{
+				return new ErrorResponse(HttpStatusCode.BadRequest, $"Invalid Request. Client does not have an account with {exchangeRequestDto.SourceCurrency} currency.");
+			}
+
+			if (customerWallet.Amount < exchangeRequestDto.ExchangeAmount)
+			{
+				return new ErrorResponse(HttpStatusCode.UnprocessableEntity, $"Client has insufficient funds in his {exchangeRequestDto.SourceCurrency} account to perform the requested exchange.");
+			}
+
+			var recentExchangeTrades = await _currencyExchangeRepository.GetRecentCurrencyExchangeTransactions(exchangeRequestDto.CustomerId);
+			return recentExchangeTrades.Count >= 10 ? new ErrorResponse(HttpStatusCode.UnprocessableEntity, "Client exceeded maximum allowed exchange trades per hour.") : null;
+		}
+
+		private async Task<decimal> GetExchangeRate(string currencyFrom, string currencyTo)
 		{
 			var key = currencyFrom + currencyTo;
 
@@ -60,9 +87,13 @@ namespace medirect_currency_exchange.Application.Services
 			{
 				var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
 
-				exchangeRate = await _exchangeRateApiClient.GetExchangeRate(currencyFrom, currencyTo);
+				var exchangeRateApiResponse = await _exchangeRateApiClient.GetExchangeRate(currencyFrom, currencyTo);
 
-				_memoryCache.Set(key, exchangeRate, cacheEntryOptions);
+				if (exchangeRateApiResponse.Item1 > 0 && exchangeRateApiResponse.Item2 == null)
+				{
+					exchangeRate = exchangeRateApiResponse.Item1.Value;
+					_memoryCache.Set(key, exchangeRate, cacheEntryOptions);
+				}
 			}
 
 			return exchangeRate;
@@ -72,7 +103,7 @@ namespace medirect_currency_exchange.Application.Services
 		{
 			var dateNow = DateTime.Now;
 			sourceWallet.Amount -= originalAmount;
-			targetWallet.LastModified = dateNow;
+			sourceWallet.LastModified = dateNow;
 			targetWallet.Amount += convertedAmount;
 			targetWallet.LastModified = dateNow;
 			await _currencyExchangeRepository.SaveChangesAsync();
@@ -94,5 +125,4 @@ namespace medirect_currency_exchange.Application.Services
 
 		private decimal CalculateConversion(decimal exchangeRate, decimal amount) => amount * exchangeRate;
 	}
-
 }

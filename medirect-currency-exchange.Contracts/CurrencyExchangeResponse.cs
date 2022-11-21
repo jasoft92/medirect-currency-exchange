@@ -6,7 +6,7 @@ namespace medirect_currency_exchange.Contracts
 	public class CurrencyExchangeResponse
 	{
 		[DataMember]
-		public double CustomerId { get; set; }
+		public long CustomerId { get; set; }
 
 		[DataMember]
 		public decimal SourceAccountBalance { get; set; }

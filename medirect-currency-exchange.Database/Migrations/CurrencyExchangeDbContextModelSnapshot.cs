@@ -31,8 +31,8 @@ namespace medirectcurrencyexchange.Database.Migrations
                     b.Property<decimal>("ConvertedAmount")
                         .HasColumnType("decimal(18,5)");
 
-                    b.Property<double>("CustomerId")
-                        .HasColumnType("float");
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
 
                     b.Property<decimal>("ExchangeRate")
                         .HasColumnType("decimal(18,5)");
@@ -60,8 +60,8 @@ namespace medirectcurrencyexchange.Database.Migrations
 
             modelBuilder.Entity("medirect_currency_exchange.Domain.Models.Customer", b =>
                 {
-                    b.Property<double>("Id")
-                        .HasColumnType("float");
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
@@ -89,8 +89,8 @@ namespace medirectcurrencyexchange.Database.Migrations
 
             modelBuilder.Entity("medirect_currency_exchange.Domain.Models.CustomerWallet", b =>
                 {
-                    b.Property<double>("CustomerId")
-                        .HasColumnType("float");
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("CurrencyCode")
                         .HasColumnType("nvarchar(450)");

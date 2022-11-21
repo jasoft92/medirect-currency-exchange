@@ -15,7 +15,7 @@ namespace medirectcurrencyexchange.Database.Migrations
                 name: "Customers",
                 columns: table => new
                 {
-                    Id = table.Column<double>(type: "float", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdCard = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -32,7 +32,7 @@ namespace medirectcurrencyexchange.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<double>(type: "float", nullable: false),
+                    CustomerId = table.Column<long>(type: "bigint", nullable: false),
                     FromCurrencyCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SourceAmount = table.Column<decimal>(type: "decimal(18,5)", nullable: false),
                     ToCurrencyCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -55,7 +55,7 @@ namespace medirectcurrencyexchange.Database.Migrations
                 name: "CustomerWallets",
                 columns: table => new
                 {
-                    CustomerId = table.Column<double>(type: "float", nullable: false),
+                    CustomerId = table.Column<long>(type: "bigint", nullable: false),
                     CurrencyCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,5)", nullable: false),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)

@@ -5,10 +5,7 @@ namespace medirect_currency_exchange.Database.Context
 {
 	public class CurrencyExchangeDbContext : DbContext
 	{
-		public CurrencyExchangeDbContext(DbContextOptions<CurrencyExchangeDbContext> options) : base(options)
-		{
-
-		}
+		public CurrencyExchangeDbContext(DbContextOptions<CurrencyExchangeDbContext> options) : base(options) { }
 
 		public DbSet<Customer> Customers { get; set; }
 		public DbSet<CustomerWallet?> CustomerWallets { get; set; }
@@ -20,14 +17,18 @@ namespace medirect_currency_exchange.Database.Context
 			modelBuilder.Entity<Customer>()
 				.HasKey(m => m.Id);
 
+			modelBuilder.Entity<Customer>()
+				.Property(p => p.Id)
+				.ValueGeneratedNever();
+
 			modelBuilder.Entity<CustomerWallet>()
-				.HasKey(m => new { m.CustomerId, m.CurrencyCode});
+				.HasKey(m => new { m.CustomerId, m.CurrencyCode });
 
 			modelBuilder.Entity<CurrencyExchangeTransaction>()
 				.HasKey(m => m.Id);
 
 			modelBuilder.Entity<CurrencyExchangeTransaction>()
-				.Property(p=>p.Id)
+				.Property(p => p.Id)
 				.ValueGeneratedOnAdd();
 		}
 
