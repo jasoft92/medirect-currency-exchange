@@ -1,5 +1,6 @@
 ﻿using medirect_currency_exchange.Application.Clients;
 using medirect_currency_exchange.Database.Repositories;
+using medirect_currency_exchange.Domain;
 using medirect_currency_exchange.Domain.DTOs;
 using medirect_currency_exchange.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
@@ -19,7 +20,7 @@ namespace medirect_currency_exchange.Application.Services
 			_currencyExchangeRepository = currencyExchangeRepository;
 		}
 
-		public async Task<decimal> ProcessExchange(CurrencyExchangeDto currencyExchangeDto)
+		public async Task<CurrencyExchangeProcessingResult> ProcessExchange(ExchangeRequestDto currencyExchangeDto)
 		{
 			var wallets = await _currencyExchangeRepository.GetCustomerWallets(currencyExchangeDto.CustomerId);
 
@@ -39,7 +40,15 @@ namespace medirect_currency_exchange.Application.Services
 			await UpdateCustomerWalletInformation(sourceWallet, currencyExchangeDto.ExchangeAmount, targetWallet, convertedAmount);
 			await SaveExchangeTradeInformation(currencyExchangeDto, exchangeRate, convertedAmount);
 
-			return convertedAmount;
+			//return convertedAmount;
+
+			return CurrencyExchangeProcessingResult.Create(new ExchangeResponseDto(
+					customerId: currencyExchangeDto.CustomerId,
+					sourceAccountBalance: sourceWallet.Amount,
+					sourceCurrencyCode: sourceWallet.CurrencyCode,
+					targetAccountBalance: targetWallet.Amount,
+					targetCurrencyCode: targetWallet.CurrencyCode,
+					exchangeAmount: convertedAmount), null);
 		}
 
 
@@ -69,7 +78,7 @@ namespace medirect_currency_exchange.Application.Services
 			await _currencyExchangeRepository.SaveChangesAsync();
 		}
 
-		private async Task SaveExchangeTradeInformation(CurrencyExchangeDto currencyExchangeDto, decimal exchangeRate, decimal convertedAmount)
+		private async Task SaveExchangeTradeInformation(ExchangeRequestDto currencyExchangeDto, decimal exchangeRate, decimal convertedAmount)
 		{
 			await _currencyExchangeRepository.AddCurrencyExchangeHistory(new CurrencyExchangeTransaction
 			{

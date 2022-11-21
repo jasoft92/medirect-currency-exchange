@@ -8,7 +8,9 @@ namespace medirect_currency_exchange.Domain.Profiles
 	{
 		public CurrencyExchangeProfile()
 		{
-			CreateMap<CurrencyExchangeRequest, CurrencyExchangeDto>();
+			CreateMap<CurrencyExchangeRequest, ExchangeRequestDto>();
+
+			CreateMap<ExchangeResponseDto, CurrencyExchangeResponse>();
 		}
 	}
 }

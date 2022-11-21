@@ -2,18 +2,19 @@
 
 namespace medirect_currency_exchange.Contracts
 {
+	[DataContract]
 	public class CurrencyExchangeRequest
 	{
-		[DataMember(Name = "customerId")]
+		[DataMember]
 		public double CustomerId { get; set; }
 
-		[DataMember(Name = "sourceCurrency")]
+		[DataMember]
 		public string SourceCurrency { get; set; }
 
-		[DataMember(Name = "targetCurrency")] 
+		[DataMember] 
 		public string TargetCurrency { get; set; }
 
-		[DataMember(Name = "exchangeAmount")]
+		[DataMember]
 		public decimal ExchangeAmount { get; set; }
 	}
 }
