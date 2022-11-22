@@ -16,13 +16,12 @@ namespace medirect_currency_exchange.Validators
 				.Length(3).WithMessage("Incorrect source currency format, currency code must be 3 characters long");
 
 
-			RuleFor(r => r.SourceCurrency)
+			RuleFor(r => r.TargetCurrency)
 				.NotEmpty().WithMessage("Target currency code cannot be empty")
 				.Length(3).WithMessage("Incorrect target currency format, currency code must be 3 characters long");
 
 			RuleFor(r=>r.ExchangeAmount)
-				.NotEmpty().WithMessage("Exchange amount cannot be left empty.")
-
+				.NotEmpty().WithMessage("Exchange amount cannot be left empty")
 				.GreaterThan(0).WithMessage("Exchange amount must be greater than 0");
 		}
 	}
