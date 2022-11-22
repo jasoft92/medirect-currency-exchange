@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "medirect-currency-exchange.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "medirect-currency-exchange.Application", "medirect-currency-exchange.Application\medirect-currency-exchange.Application.csproj", "{45BC4433-4E40-475C-8583-93B58BF15DC3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "medirect-currency-exchange.Logger", "medirect-currency-exchange.Logger\medirect-currency-exchange.Logger.csproj", "{51308187-7B60-4F08-A9D6-93BBC6B0B765}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{45BC4433-4E40-475C-8583-93B58BF15DC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45BC4433-4E40-475C-8583-93B58BF15DC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45BC4433-4E40-475C-8583-93B58BF15DC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51308187-7B60-4F08-A9D6-93BBC6B0B765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51308187-7B60-4F08-A9D6-93BBC6B0B765}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51308187-7B60-4F08-A9D6-93BBC6B0B765}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51308187-7B60-4F08-A9D6-93BBC6B0B765}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
