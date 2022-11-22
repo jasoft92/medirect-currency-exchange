@@ -2,19 +2,23 @@
 using Newtonsoft.Json;
 using medirect_currency_exchange.Application.Clients.Models;
 using medirect_currency_exchange.Application.Exception;
+using medirect_currency_exchange.Logger;
 
 namespace medirect_currency_exchange.Application.Clients
 {
 	public class ExchangeRateApiClient : IExchangeRateApiClient
 	{
 		private readonly HttpClient _httpClient;
+		private readonly ILoggerManager _loggerManager;
 
 		private const string INVALID_FROM_CURRENCY = "invalid_from_currency";
 		private const string INVALID_TO_CURRENCY = "invalid_to_currency";
 		private const string INVALID_AMOUNT = "invalid_conversion_amount";
 
-		public ExchangeRateApiClient()
+		public ExchangeRateApiClient(ILoggerManager loggerManager)
 		{
+			_loggerManager = loggerManager;
+
 			//TODO check
 			_httpClient = new HttpClient
 			{
@@ -50,7 +54,11 @@ namespace medirect_currency_exchange.Application.Clients
 			}
 
 			var rateClientResponse = JsonConvert.DeserializeObject<RateClientResponse>(resultContent);
-			if (rateClientResponse != null) return rateClientResponse.Rate;
+			if (rateClientResponse != null)
+			{
+				_loggerManager.LogInfo($"Exchange Rate API Request. SourceCurrency: {currencyFrom} | TargetCurrency {currencyTo} | Rate: {rateClientResponse.Rate}");
+				return rateClientResponse.Rate;
+			}
 
 			throw new ApiException(HttpStatusCode.InternalServerError, "Error with currency exchange rate retrieval");
 		}

@@ -4,6 +4,7 @@ namespace medirect_currency_exchange.Database.Repositories
 {
 	public interface ICurrencyExchangeRepository
 	{
+		Task<Customer?> GetCustomer(long customerId);
 		Task<List<CustomerWallet?>> GetCustomerWallets(long customerId);
 		Task<CustomerWallet> AddCustomerWallet(CustomerWallet newCustomerWallet);
 		Task<CurrencyExchangeTransaction> AddCurrencyExchangeHistory(CurrencyExchangeTransaction currencyExchangeTransaction);

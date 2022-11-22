@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using medirect_currency_exchange.Application.Clients;
 using medirect_currency_exchange.Application.Services;
+using medirect_currency_exchange.Contracts;
 using medirect_currency_exchange.Database.Context;
 using medirect_currency_exchange.Database.Repositories;
 using medirect_currency_exchange.Domain.Profiles;
 using medirect_currency_exchange.Logger;
+using medirect_currency_exchange.Validators;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
@@ -17,6 +20,7 @@ LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nl
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ILoggerManager, LoggerManager>();
+builder.Services.AddSingleton<IValidator<CurrencyExchangeRequest>,ExchangeRequestValidator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
