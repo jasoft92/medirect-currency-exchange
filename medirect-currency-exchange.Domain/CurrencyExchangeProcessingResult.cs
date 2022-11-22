@@ -1,19 +1,18 @@
-﻿using medirect_currency_exchange.Contracts;
-using medirect_currency_exchange.Domain.DTOs;
+﻿using medirect_currency_exchange.Domain.DTOs;
 
 namespace medirect_currency_exchange.Domain
 {
 	public class CurrencyExchangeProcessingResult
 	{
 		public ExchangeResponseDto? ExchangeResponseDto { get; }
-		public ErrorResponse? ErrorResponse { get; }
+		public ErrorResponseDto? ErrorResponse { get; }
 
-		public static CurrencyExchangeProcessingResult Create(ExchangeResponseDto? exchangeResponseDto, ErrorResponse? errorResponse)
+		public static CurrencyExchangeProcessingResult Create(ExchangeResponseDto? exchangeResponseDto, ErrorResponseDto? errorResponse)
 		{
 			return new CurrencyExchangeProcessingResult(exchangeResponseDto, errorResponse);
 		}
 
-		private CurrencyExchangeProcessingResult(ExchangeResponseDto? exchangeResponseDto, ErrorResponse? errorResponse)
+		private CurrencyExchangeProcessingResult(ExchangeResponseDto? exchangeResponseDto, ErrorResponseDto? errorResponse)
 		{
 			ExchangeResponseDto = exchangeResponseDto;
 			ErrorResponse = errorResponse;

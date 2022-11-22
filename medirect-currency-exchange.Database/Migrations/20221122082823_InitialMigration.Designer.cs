@@ -12,7 +12,7 @@ using medirect_currency_exchange.Database.Context;
 namespace medirectcurrencyexchange.Database.Migrations
 {
     [DbContext(typeof(CurrencyExchangeDbContext))]
-    [Migration("20221121210821_InitialMigration")]
+    [Migration("20221122082823_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -65,9 +65,6 @@ namespace medirectcurrencyexchange.Database.Migrations
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime>("DOB")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()

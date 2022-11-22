@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using medirect_currency_exchange.Application.Clients;
-using medirect_currency_exchange.Contracts;
 using medirect_currency_exchange.Database.Repositories;
 using medirect_currency_exchange.Domain;
 using medirect_currency_exchange.Domain.DTOs;
@@ -38,9 +37,7 @@ namespace medirect_currency_exchange.Application.Services
 			var exchangeRate = await GetExchangeRate(
 				currencyFrom: exchangeRequestDto.SourceCurrency,
 				currencyTo: exchangeRequestDto.TargetCurrency);
-
-			//TODO ValidateExchangeRate Validity
-
+			
 			targetWallet ??= await _currencyExchangeRepository.AddCustomerWallet(new CustomerWallet
 			{
 				CustomerId = exchangeRequestDto.CustomerId,
@@ -63,20 +60,20 @@ namespace medirect_currency_exchange.Application.Services
 		}
 
 
-		private async Task<ErrorResponse?> ValidateRequest(ExchangeRequestDto exchangeRequestDto, CustomerWallet? customerWallet)
+		private async Task<ErrorResponseDto?> ValidateRequest(ExchangeRequestDto exchangeRequestDto, CustomerWallet? customerWallet)
 		{
 			if (customerWallet == null)
 			{
-				return new ErrorResponse(HttpStatusCode.BadRequest, $"Invalid Request. Client does not have an account with {exchangeRequestDto.SourceCurrency} currency.");
+				return new ErrorResponseDto(HttpStatusCode.BadRequest, $"Invalid Request. Client does not have an account with {exchangeRequestDto.SourceCurrency} currency.");
 			}
 
 			if (customerWallet.Amount < exchangeRequestDto.ExchangeAmount)
 			{
-				return new ErrorResponse(HttpStatusCode.UnprocessableEntity, $"Client has insufficient funds in his {exchangeRequestDto.SourceCurrency} account to perform the requested exchange.");
+				return new ErrorResponseDto(HttpStatusCode.UnprocessableEntity, $"Client has insufficient funds in his {exchangeRequestDto.SourceCurrency} account to perform the requested exchange.");
 			}
 
 			var recentExchangeTrades = await _currencyExchangeRepository.GetRecentCurrencyExchangeTransactions(exchangeRequestDto.CustomerId);
-			return recentExchangeTrades.Count >= 10 ? new ErrorResponse(HttpStatusCode.UnprocessableEntity, "Client exceeded maximum allowed exchange trades per hour.") : null;
+			return recentExchangeTrades.Count >= 10 ? new ErrorResponseDto(HttpStatusCode.UnprocessableEntity, "Client exceeded maximum allowed exchange trades per hour.") : null;
 		}
 
 		private async Task<decimal> GetExchangeRate(string currencyFrom, string currencyTo)
@@ -87,13 +84,9 @@ namespace medirect_currency_exchange.Application.Services
 			{
 				var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
 
-				var exchangeRateApiResponse = await _exchangeRateApiClient.GetExchangeRate(currencyFrom, currencyTo);
+				exchangeRate = await _exchangeRateApiClient.GetExchangeRate(currencyFrom, currencyTo);
 
-				if (exchangeRateApiResponse.Item1 > 0 && exchangeRateApiResponse.Item2 == null)
-				{
-					exchangeRate = exchangeRateApiResponse.Item1.Value;
-					_memoryCache.Set(key, exchangeRate, cacheEntryOptions);
-				}
+				_memoryCache.Set(key, exchangeRate, cacheEntryOptions);
 			}
 
 			return exchangeRate;

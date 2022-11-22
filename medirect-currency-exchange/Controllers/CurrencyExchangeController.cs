@@ -4,6 +4,7 @@ using medirect_currency_exchange.Contracts;
 using medirect_currency_exchange.Domain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using medirect_currency_exchange.Application.Exception;
 
 namespace medirect_currency_exchange.Controllers
 {
@@ -35,12 +36,16 @@ namespace medirect_currency_exchange.Controllers
 
 				if (processResult.ErrorResponse != null)
 				{
-					return CreateResponse(processResult.ErrorResponse.ErrorCode, processResult.ErrorResponse.Message);
+					var errorCode = processResult.ErrorResponse.ErrorCode;
+					return CreateResponse(errorCode, new ErrorResponse(errorCode, processResult.ErrorResponse.Message));
 				}
-
 
 				return CreateResponse(HttpStatusCode.InternalServerError, new ErrorResponse(HttpStatusCode.InternalServerError, "Error Performing Currency Exchange"));
 
+			}
+			catch (ApiException apiException)
+			{
+				return CreateResponse(apiException.HttpStatusCode, new ErrorResponse(apiException.HttpStatusCode, apiException.Message));
 			}
 			catch (Exception ex)
 			{

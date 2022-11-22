@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
 using medirect_currency_exchange.Application.Clients.Models;
-using medirect_currency_exchange.Contracts;
+using medirect_currency_exchange.Application.Exception;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace medirect_currency_exchange.Application.Clients
@@ -19,7 +19,7 @@ namespace medirect_currency_exchange.Application.Clients
 				DefaultRequestHeaders = { { "apikey", "WdopSdwXLg67GbYzfS2JQ8bfmIx40FfL" } }
 			};
 		}
-		public async Task<Tuple<decimal?, ErrorResponse?>> GetExchangeRate(string currencyFrom, string currencyTo)
+		public async Task<decimal> GetExchangeRate(string currencyFrom, string currencyTo)
 		{
 			var url = _httpClient.BaseAddress + $"convert?to={currencyTo}&from={currencyFrom}&amount=1";
 			var httpResponse = await _httpClient.GetAsync(url);
@@ -28,16 +28,26 @@ namespace medirect_currency_exchange.Application.Clients
 			if (!httpResponse.IsSuccessStatusCode)
 			{
 				var error = JsonConvert.DeserializeObject<RateApiError>(resultContent);
-				return new Tuple<decimal?, ErrorResponse?>(
-					item1: null,
-					item2: new ErrorResponse(HttpStatusCode.BadRequest, error?.ErrorDetails.Message ?? ""));
+				
+				switch (error?.ErrorDetails.Code)
+				{
+					case "invalid_from_currency":
+						throw new ApiException(HttpStatusCode.BadRequest, "The currency to convert FROM is invalid");
+
+					case "invalid_to_currency":
+						throw new ApiException(HttpStatusCode.BadRequest, "The currency to convert TO is invalid");
+					
+					case "invalid_conversion_amount":
+						throw new ApiException(HttpStatusCode.BadRequest, "The amount to be converted is invalid");
+
+					default: throw new ApiException(HttpStatusCode.InternalServerError, error?.ErrorDetails.Message ?? "Error with currency exchange rate retrieval");
+				}
 			}
 
-			var rate = JsonConvert.DeserializeObject<RateClientResponse>(resultContent).Rate;
+			var rateClientResponse = JsonConvert.DeserializeObject<RateClientResponse>(resultContent);
+			if (rateClientResponse != null) return rateClientResponse.Rate;
 
-			return new Tuple<decimal?, ErrorResponse?>(
-				item1: rate,
-				item2: null);
+			throw new ApiException(HttpStatusCode.InternalServerError, "Error with currency exchange rate retrieval");
 		}
 	}
 }
