@@ -4,6 +4,7 @@ using medirect_currency_exchange.Database.Repositories;
 using medirect_currency_exchange.Domain;
 using medirect_currency_exchange.Domain.DTOs;
 using medirect_currency_exchange.Domain.Models;
+using medirect_currency_exchange.Logger;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace medirect_currency_exchange.Application.Services
@@ -13,12 +14,14 @@ namespace medirect_currency_exchange.Application.Services
 		private readonly IMemoryCache _memoryCache;
 		private readonly IExchangeRateApiClient _exchangeRateApiClient;
 		private readonly ICurrencyExchangeRepository _currencyExchangeRepository;
+		private readonly ILoggerManager _loggerManager;
 
-		public CurrencyExchangeService(IMemoryCache memoryCache, IExchangeRateApiClient exchangeRateApiClient, ICurrencyExchangeRepository currencyExchangeRepository)
+		public CurrencyExchangeService(IMemoryCache memoryCache, IExchangeRateApiClient exchangeRateApiClient, ICurrencyExchangeRepository currencyExchangeRepository, ILoggerManager loggerManager)
 		{
 			_memoryCache = memoryCache;
 			_exchangeRateApiClient = exchangeRateApiClient;
 			_currencyExchangeRepository = currencyExchangeRepository;
+			_loggerManager = loggerManager;
 		}
 
 		public async Task<CurrencyExchangeProcessingResult> ProcessExchange(ExchangeRequestDto exchangeRequestDto)

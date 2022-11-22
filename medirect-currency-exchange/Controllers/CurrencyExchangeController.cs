@@ -5,6 +5,7 @@ using medirect_currency_exchange.Domain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using medirect_currency_exchange.Application.Exception;
+using medirect_currency_exchange.Logger;
 
 namespace medirect_currency_exchange.Controllers
 {
@@ -14,11 +15,13 @@ namespace medirect_currency_exchange.Controllers
 	{
 		private readonly IMapper _mapper;
 		private readonly ICurrencyExchangeService _currencyExchangeService;
+		private readonly ILoggerManager _loggerManager;
 
-		public CurrencyExchangeController(IMapper mapper, ICurrencyExchangeService currencyExchangeService)
+		public CurrencyExchangeController(IMapper mapper, ICurrencyExchangeService currencyExchangeService, ILoggerManager loggerManager)
 		{
 			_mapper = mapper;
 			_currencyExchangeService = currencyExchangeService;
+			_loggerManager = loggerManager;
 		}
 
 		[HttpPost]
@@ -26,6 +29,8 @@ namespace medirect_currency_exchange.Controllers
 		{
 			try
 			{
+				_loggerManager.LogInfo($"Currency Exchange Request received. CustomerID: {request.CustomerId} | From {request.SourceCurrency} To {request.TargetCurrency} | Amount: {request.ExchangeAmount}");
+				
 				var processResult = await _currencyExchangeService.ProcessExchange(_mapper.Map<CurrencyExchangeRequest, ExchangeRequestDto>(request));
 
 				if (processResult.ExchangeResponseDto != null && processResult.ErrorResponse == null)
