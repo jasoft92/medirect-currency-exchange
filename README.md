@@ -29,7 +29,7 @@ In the below example, customer ID 1 is requested to exchange 5 EUR to GBP, and f
 
 ### ConnectionStrings
 
-In the ```appsettings.json``` file, the connection string *(CurrencyExchangeDbConnectionString)* requires the placeholders for **#server#** **#user#** and **#password#** to be replaced (CurrencyExchangeDbConnectionString)
+In the ```appsettings.json``` file, the connection string *(CurrencyExchangeDbConnectionString)* requires the placeholders for **#server#** **#user#** and **#password#** to be replaced
 ```
   "ConnectionStrings": {
     "CurrencyExchangeDbConnectionString": "Server=#server#;Database=currencyexchangedb;User ID=#user#;Password=#password#;Encrypt=true;Connection Timeout=300;"
