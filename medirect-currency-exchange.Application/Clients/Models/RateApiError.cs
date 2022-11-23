@@ -5,7 +5,7 @@ namespace medirect_currency_exchange.Application.Clients.Models
 	public class RateApiError
 	{
 		[JsonProperty("error")]
-		public ErrorDetails ErrorDetails { get; set; }
+		public ErrorDetails? ErrorDetails { get; set; }
 	}
 
 	public class ErrorDetails

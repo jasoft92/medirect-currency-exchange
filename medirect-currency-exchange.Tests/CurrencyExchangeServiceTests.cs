@@ -270,7 +270,7 @@ namespace medirect_currency_exchange.Tests
 				.ReturnsAsync(0.87m);
 
 			object cachedExchangeRate = 0.85m;
-			var memoryCache = MockMemoryCacheService.GetMemoryCache(cachedExchangeRate);
+			var memoryCache = GetMemoryCache(cachedExchangeRate);
 
 			var currencyExchangeService = new CurrencyExchangeService(
 				memoryCache,
@@ -292,16 +292,13 @@ namespace medirect_currency_exchange.Tests
 			_currencyExchangeRepositoryMock.Verify(m => m.AddCustomerWallet(It.IsAny<CustomerWallet>()), Times.Never);
 		}
 
-		private static class MockMemoryCacheService
+		private static IMemoryCache GetMemoryCache(object expectedValue)
 		{
-			public static IMemoryCache GetMemoryCache(object expectedValue)
-			{
-				var mockMemoryCache = new Mock<IMemoryCache>();
-				mockMemoryCache
-					.Setup(x => x.TryGetValue(It.IsAny<object>(), out expectedValue))
-					.Returns(true);
-				return mockMemoryCache.Object;
-			}
+			var mockMemoryCache = new Mock<IMemoryCache>();
+			mockMemoryCache
+				.Setup(x => x.TryGetValue(It.IsAny<object>(), out expectedValue))
+				.Returns(true);
+			return mockMemoryCache.Object;
 		}
 	}
 }

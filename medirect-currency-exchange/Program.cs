@@ -32,6 +32,12 @@ builder.Services.AddScoped<ICurrencyExchangeRepository, CurrencyExchangeReposito
 builder.Services.AddScoped<ICurrencyExchangeService, CurrencyExchangeService>();
 builder.Services.AddScoped<IExchangeRateApiClient, ExchangeRateApiClient>();
 
+builder.Services.AddHttpClient<IExchangeRateApiClient, ExchangeRateApiClient>(client =>
+{
+	client.BaseAddress = new Uri("https://api.apilayer.com/exchangerates_data/");
+	client.DefaultRequestHeaders.Add("apikey", "WdopSdwXLg67GbYzfS2JQ8bfmIx40FfL");
+});
+
 builder.Services.AddMemoryCache();
 
 var config = new MapperConfiguration(cfg =>
