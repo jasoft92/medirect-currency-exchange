@@ -13,19 +13,19 @@ namespace medirect_currency_exchange.Database.Repositories
 			_dbcontext = dbcontext;
 		}
 
-		public async Task<Customer?> GetCustomer(long customerId)
+		public Task<Customer?> GetCustomer(long customerId)
 		{
-			return await _dbcontext.Customers.SingleOrDefaultAsync(cw => cw.Id == customerId);
+			return _dbcontext.Customers.SingleOrDefaultAsync(cw => cw.Id == customerId);
 		}
 
-		public async Task<List<CustomerWallet?>> GetCustomerWallets(long customerId)
+		public Task<List<CustomerWallet?>> GetCustomerWallets(long customerId)
 		{
-			return await _dbcontext.CustomerWallets.Where(cw => cw.CustomerId == customerId).ToListAsync();
+			return _dbcontext.CustomerWallets.Where(cw => cw.CustomerId == customerId).ToListAsync();
 		}
 
 		public async Task<CustomerWallet> AddCustomerWallet(CustomerWallet newCustomerWallet)
 		{
-			_dbcontext.CustomerWallets.Add(newCustomerWallet);
+			await _dbcontext.CustomerWallets.AddAsync(newCustomerWallet);
 			await _dbcontext.SaveChangesAsync();
 			return newCustomerWallet;
 		}
@@ -37,9 +37,9 @@ namespace medirect_currency_exchange.Database.Repositories
 			return currencyExchangeTransaction;
 		}
 
-		public async Task<List<CurrencyExchangeTransaction>> GetRecentCurrencyExchangeTransactions(long customerId)
+		public Task<List<CurrencyExchangeTransaction>> GetRecentCurrencyExchangeTransactions(long customerId)
 		{
-			return await _dbcontext.CurrencyExchangeTransactions.Where(t => t.CustomerId == customerId && t.TimeStamp > DateTime.Now.AddHours(-1)).ToListAsync();
+			return _dbcontext.CurrencyExchangeTransactions.Where(t => t.CustomerId == customerId && t.TimeStamp > DateTime.Now.AddHours(-1)).ToListAsync();
 		}
 
 		public async Task SaveChangesAsync()

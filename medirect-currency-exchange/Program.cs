@@ -14,38 +14,40 @@ using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
-
 // Add services to the container.
 builder.Services.AddControllers();
-
-builder.Services.AddScoped<ILoggerManager, LoggerManager>();
-builder.Services.AddSingleton<IValidator<CurrencyExchangeRequest>,ExchangeRequestValidator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+builder.Services.AddScoped<ILoggerManager, LoggerManager>();
+
+builder.Services.AddSingleton<IValidator<CurrencyExchangeRequest>, ExchangeRequestValidator>();
+
 builder.Services.AddDbContext<CurrencyExchangeDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CurrencyExchangeDbConnectionString")));
-
 builder.Services.AddScoped<ICurrencyExchangeRepository, CurrencyExchangeRepository>();
-builder.Services.AddScoped<ICurrencyExchangeService, CurrencyExchangeService>();
-builder.Services.AddScoped<IExchangeRateApiClient, ExchangeRateApiClient>();
 
+builder.Services.AddScoped<IExchangeRateApiClient, ExchangeRateApiClient>();
 builder.Services.AddHttpClient<IExchangeRateApiClient, ExchangeRateApiClient>(client =>
 {
 	client.BaseAddress = new Uri("https://api.apilayer.com/exchangerates_data/");
 	client.DefaultRequestHeaders.Add("apikey", "WdopSdwXLg67GbYzfS2JQ8bfmIx40FfL");
 });
 
+builder.Services.AddScoped<ICurrencyExchangeService, CurrencyExchangeService>();
 builder.Services.AddMemoryCache();
 
 var config = new MapperConfiguration(cfg =>
 {
 	cfg.AddProfile(new CurrencyExchangeProfile());
 });
+
 var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
+
 
 var app = builder.Build();
 
