@@ -9,6 +9,7 @@ using Moq;
 
 namespace medirect_currency_exchange.Tests
 {
+	[TestFixture]
 	internal class CurrencyExchangeServiceTests
 	{
 		private CurrencyExchangeService _currencyExchangeService;
@@ -249,7 +250,6 @@ namespace medirect_currency_exchange.Tests
 			Assert.IsNotNull(result.ErrorResponse);
 			Assert.Null(result.ExchangeResponseDto);
 			Assert.AreEqual("Client exceeded maximum allowed exchange trades per hour", result.ErrorResponse.Message);
-
 		}
 
 		[Test]
