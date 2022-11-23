@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using medirect_currency_exchange.Database.Context;
 
@@ -11,9 +12,11 @@ using medirect_currency_exchange.Database.Context;
 namespace medirectcurrencyexchange.Database.Migrations
 {
     [DbContext(typeof(CurrencyExchangeDbContext))]
-    partial class CurrencyExchangeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221123221203_DatabaseSeeding")]
+    partial class DatabaseSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
