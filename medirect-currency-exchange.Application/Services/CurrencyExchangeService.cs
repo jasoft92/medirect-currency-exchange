@@ -51,7 +51,7 @@ namespace medirect_currency_exchange.Application.Services
 				_loggerManager.LogInfo($"Created wallet for {exchangeRequestDto.TargetCurrency} currency for customer {exchangeRequestDto.CustomerId}");
 			}
 
-			var convertedAmount = CalculateConversion(exchangeRate, exchangeRequestDto.ExchangeAmount);
+			var convertedAmount = Math.Round(CalculateConversion(exchangeRate, exchangeRequestDto.ExchangeAmount),2);
 
 			await UpdateCustomerWalletInformation(sourceWallet, exchangeRequestDto.ExchangeAmount, targetWallet, convertedAmount);
 			await SaveExchangeTradeInformation(exchangeRequestDto, exchangeRate, convertedAmount);
@@ -62,7 +62,8 @@ namespace medirect_currency_exchange.Application.Services
 					sourceCurrencyCode: sourceWallet.CurrencyCode,
 					targetAccountBalance: targetWallet.Amount,
 					targetCurrencyCode: targetWallet.CurrencyCode,
-					exchangeAmount: convertedAmount), null);
+					exchangeAmount: convertedAmount,
+					exchangeRate: exchangeRate), null);
 		}
 
 

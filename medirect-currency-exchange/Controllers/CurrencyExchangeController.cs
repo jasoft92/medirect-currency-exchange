@@ -7,11 +7,16 @@ using System.Net;
 using FluentValidation;
 using medirect_currency_exchange.Application.Exception;
 using medirect_currency_exchange.Logger;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace medirect_currency_exchange.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
+	[SwaggerResponse(200, type: typeof(CurrencyExchangeResponse))]
+	[SwaggerResponse(400, type: typeof(ErrorResponse))]
+	[SwaggerResponse(422, type: typeof(ErrorResponse))]
+	[SwaggerResponse(500, type: typeof(ErrorResponse))]
 	public class CurrencyExchangeController : ControllerBase
 	{
 		private readonly IMapper _mapper;

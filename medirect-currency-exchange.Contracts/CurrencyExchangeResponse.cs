@@ -22,5 +22,8 @@ namespace medirect_currency_exchange.Contracts
 
 		[DataMember]
 		public decimal ExchangeAmount { get; set; }
+
+		[DataMember]
+		public decimal ExchangeRate { get; set; }
 	}
 }

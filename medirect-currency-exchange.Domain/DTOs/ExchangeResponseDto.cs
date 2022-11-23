@@ -14,7 +14,9 @@
 
 		public decimal ExchangeAmount { get; }
 
-		public ExchangeResponseDto(long customerId, decimal sourceAccountBalance, string sourceCurrencyCode, decimal targetAccountBalance, string targetCurrencyCode, decimal exchangeAmount)
+		public decimal ExchangeRate { get; }
+
+		public ExchangeResponseDto(long customerId, decimal sourceAccountBalance, string sourceCurrencyCode, decimal targetAccountBalance, string targetCurrencyCode, decimal exchangeAmount, decimal exchangeRate)
 		{
 			CustomerId = customerId;
 			SourceAccountBalance = sourceAccountBalance;
@@ -22,6 +24,7 @@
 			TargetAccountBalance = targetAccountBalance;
 			TargetCurrencyCode = targetCurrencyCode;
 			ExchangeAmount = exchangeAmount;
+			ExchangeRate = exchangeRate;
 		}
 	}
 }
