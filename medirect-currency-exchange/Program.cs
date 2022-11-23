@@ -33,8 +33,8 @@ builder.Services.AddScoped<ICurrencyExchangeRepository, CurrencyExchangeReposito
 builder.Services.AddScoped<IExchangeRateApiClient, ExchangeRateApiClient>();
 builder.Services.AddHttpClient<IExchangeRateApiClient, ExchangeRateApiClient>(client =>
 {
-	client.BaseAddress = new Uri("https://api.apilayer.com/exchangerates_data/");
-	client.DefaultRequestHeaders.Add("apikey", "WdopSdwXLg67GbYzfS2JQ8bfmIx40FfL");
+	client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ExchangeRateApi:BaseAddress"));
+	client.DefaultRequestHeaders.Add("apikey", builder.Configuration.GetValue<string>("ExchangeRateApi:ApiKey"));
 });
 
 builder.Services.AddScoped<ICurrencyExchangeService, CurrencyExchangeService>();
