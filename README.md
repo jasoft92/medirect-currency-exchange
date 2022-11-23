@@ -10,10 +10,10 @@ The request expects the following parameters:
 - TargetCurrency
 - ExchangeAmount
 
-When a request is received, checks are made to validate that the bank customer has enough funds in his source currency wallet and after the exchange rate is retrieved, the converted amount is calculated and deducted from his source currency wallet, and added to his target currency account.
+When a request is received, checks are made to validate that the bank customer has enough funds in his source currency wallet account and after the exchange rate is retrieved, the converted amount is calculated and deducted from his source currency wallet account, and added to his target currency wallet account.
 
 The below is an example request made, followed by screenshots from SwaggerUI to which shows the response received. 
-In the below example, customer ID 1 is requested to exchange 5 EUR to GBP, and from the response it is shown that the converted amount for that exchange is 4.31, the new balance in the source account (EUR) was deducted by 5, while the balance in the target account (GBP) increased by 4.31
+In the below example, customer with ID 1 requested to exchange 5 EUR to GBP, and from the response it is shown that the converted amount for that exchange is 4.31 (having used an exchange rate of 0.862013), the new balance in the source account (EUR) was deducted by 5, while the balance in the target account (GBP) increased by 4.31
 
 ```
 {
