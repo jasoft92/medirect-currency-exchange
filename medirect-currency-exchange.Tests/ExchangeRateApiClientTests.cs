@@ -3,6 +3,7 @@ using medirect_currency_exchange.Logger;
 using Moq;
 using System.Net;
 using medirect_currency_exchange.Application.Exception;
+using medirect_currency_exchange.Domain;
 using RichardSzalay.MockHttp;
 
 namespace medirect_currency_exchange.Tests
@@ -61,7 +62,7 @@ namespace medirect_currency_exchange.Tests
 			//Assert
 			var ex = Assert.ThrowsAsync<ApiException>(() => sut.Invoke());
 			Assert.AreEqual(HttpStatusCode.BadRequest, ex.HttpStatusCode);
-			Assert.AreEqual("The currency to convert FROM is invalid", ex.Message);
+			Assert.AreEqual(ValidationErrorMessages.InvalidFromCurrency, ex.Message);
 		}
 
 		[Test]
@@ -83,7 +84,7 @@ namespace medirect_currency_exchange.Tests
 			//Assert
 			var ex = Assert.ThrowsAsync<ApiException>(() => sut.Invoke());
 			Assert.AreEqual(HttpStatusCode.BadRequest, ex.HttpStatusCode);
-			Assert.AreEqual("The currency to convert TO is invalid", ex.Message);
+			Assert.AreEqual(ValidationErrorMessages.InvalidToCurrency, ex.Message);
 		}
 
 		[Test]
@@ -105,7 +106,7 @@ namespace medirect_currency_exchange.Tests
 			//Assert
 			var ex = Assert.ThrowsAsync<ApiException>(() => sut.Invoke());
 			Assert.AreEqual(HttpStatusCode.BadRequest, ex.HttpStatusCode);
-			Assert.AreEqual("The amount to be converted is invalid", ex.Message);
+			Assert.AreEqual(ValidationErrorMessages.InvalidAmountToConvert, ex.Message);
 		}
 
 		[Test]
@@ -127,7 +128,7 @@ namespace medirect_currency_exchange.Tests
 			//Assert
 			var ex = Assert.ThrowsAsync<ApiException>(() => sut.Invoke());
 			Assert.AreEqual(HttpStatusCode.InternalServerError, ex.HttpStatusCode);
-			Assert.AreEqual("Error while retrieving currency exchange rate", ex.Message);
+			Assert.AreEqual(ValidationErrorMessages.GenericApiError, ex.Message);
 		}
 	}
 }

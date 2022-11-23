@@ -1,6 +1,7 @@
 ﻿using medirect_currency_exchange.Application.Clients;
 using medirect_currency_exchange.Application.Services;
 using medirect_currency_exchange.Database.Repositories;
+using medirect_currency_exchange.Domain;
 using medirect_currency_exchange.Domain.DTOs;
 using medirect_currency_exchange.Domain.Models;
 using medirect_currency_exchange.Logger;
@@ -127,7 +128,7 @@ namespace medirect_currency_exchange.Tests
 			// Assert
 			Assert.IsNotNull(result.ErrorResponse);
 			Assert.Null(result.ExchangeResponseDto);
-			Assert.AreEqual("Customer does not exist", result.ErrorResponse.Message);
+			Assert.AreEqual(ValidationErrorMessages.CustomerDoesNotExist, result.ErrorResponse.Message);
 		}
 
 		[Test]
@@ -212,7 +213,7 @@ namespace medirect_currency_exchange.Tests
 			// Assert
 			Assert.IsNotNull(result.ErrorResponse);
 			Assert.Null(result.ExchangeResponseDto);
-			Assert.AreEqual($"Client has insufficient funds in his {requestDto.SourceCurrency} account to perform the requested exchange", result.ErrorResponse.Message);
+			Assert.AreEqual(string.Format(ValidationErrorMessages.InsufficientFunds, requestDto.SourceCurrency), result.ErrorResponse.Message);
 		}
 
 		[Test]
@@ -249,7 +250,7 @@ namespace medirect_currency_exchange.Tests
 			// Assert
 			Assert.IsNotNull(result.ErrorResponse);
 			Assert.Null(result.ExchangeResponseDto);
-			Assert.AreEqual("Client exceeded maximum allowed exchange trades per hour", result.ErrorResponse.Message);
+			Assert.AreEqual(ValidationErrorMessages.CustomerExceededHourlyTradeLimit, result.ErrorResponse.Message);
 		}
 
 		[Test]

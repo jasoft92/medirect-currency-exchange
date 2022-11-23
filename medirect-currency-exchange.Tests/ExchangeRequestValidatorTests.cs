@@ -1,4 +1,5 @@
 ﻿using medirect_currency_exchange.Contracts;
+using medirect_currency_exchange.Domain;
 using medirect_currency_exchange.Validators;
 
 namespace medirect_currency_exchange.Tests
@@ -34,32 +35,32 @@ namespace medirect_currency_exchange.Tests
 			new object[] {
 				new CurrencyExchangeRequest { CustomerId = -1, ExchangeAmount = 5.5m, SourceCurrency = "EUR", TargetCurrency = "GBP"},
 				false,
-				"CustomerID must be greater than 0"
+				ValidationErrorMessages.CustomerIdMustBeGreaterThanZero
 			},
 			new object[] {
 				new CurrencyExchangeRequest { CustomerId = 1, ExchangeAmount = 5.5m, SourceCurrency = "", TargetCurrency = "GBP"},
 				false,
-				"Source currency code cannot be empty"
+				ValidationErrorMessages.SourceCurrencyCannotBeEmpty
 			},
 			new object[] {
 				new CurrencyExchangeRequest { CustomerId = 1, ExchangeAmount = 5.5m, SourceCurrency = "EUR", TargetCurrency = ""},
 				false,
-				"Target currency code cannot be empty"
+				ValidationErrorMessages.TargetCurrencyCannotBeEmpty
 			},
 			new object[] {
 				new CurrencyExchangeRequest { CustomerId = 1, ExchangeAmount = 5.5m, SourceCurrency = "EURO", TargetCurrency = "GBP"},
 				false,
-				"Incorrect source currency format, currency code must be 3 characters long"
+				ValidationErrorMessages.IncorrectSourceCurrencyFormat
 			},
 			new object[] {
 				new CurrencyExchangeRequest { CustomerId = 1, ExchangeAmount = 5.5m, SourceCurrency = "EUR", TargetCurrency = "BP"},
 				false,
-				"Incorrect target currency format, currency code must be 3 characters long"
+				ValidationErrorMessages.IncorrectTargetCurrencyFormat
 			},
 			new object[] {
 				new CurrencyExchangeRequest { CustomerId = 1, ExchangeAmount = -1, SourceCurrency = "EUR", TargetCurrency = "GBP"},
 				false,
-				"Exchange amount must be greater than 0"
+				ValidationErrorMessages.ExchangeAmountMustBeGreaterThanZero
 			}
 		};
 	}

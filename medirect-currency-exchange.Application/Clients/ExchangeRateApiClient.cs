@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using medirect_currency_exchange.Application.Clients.Models;
 using medirect_currency_exchange.Application.Exception;
+using medirect_currency_exchange.Domain;
 using medirect_currency_exchange.Logger;
 
 namespace medirect_currency_exchange.Application.Clients
@@ -35,16 +36,16 @@ namespace medirect_currency_exchange.Application.Clients
 				switch (error?.ErrorDetails?.Code)
 				{
 					case INVALID_FROM_CURRENCY:
-						throw new ApiException(HttpStatusCode.BadRequest, "The currency to convert FROM is invalid");
+						throw new ApiException(HttpStatusCode.BadRequest, ValidationErrorMessages.InvalidFromCurrency);
 
 					case INVALID_TO_CURRENCY:
-						throw new ApiException(HttpStatusCode.BadRequest, "The currency to convert TO is invalid");
+						throw new ApiException(HttpStatusCode.BadRequest, ValidationErrorMessages.InvalidToCurrency);
 
 					case INVALID_AMOUNT:
-						throw new ApiException(HttpStatusCode.BadRequest, "The amount to be converted is invalid");
+						throw new ApiException(HttpStatusCode.BadRequest, ValidationErrorMessages.InvalidAmountToConvert);
 				}
 
-				throw new ApiException(HttpStatusCode.InternalServerError, "Error while retrieving currency exchange rate");
+				throw new ApiException(HttpStatusCode.InternalServerError, ValidationErrorMessages.GenericApiError);
 			}
 
 			var rateClientResponse = JsonConvert.DeserializeObject<RateClientResponse>(resultContent);
@@ -54,7 +55,7 @@ namespace medirect_currency_exchange.Application.Clients
 				return rateClientResponse.Rate;
 			}
 
-			throw new ApiException(HttpStatusCode.InternalServerError, "Error with currency exchange rate retrieval");
+			throw new ApiException(HttpStatusCode.InternalServerError, ValidationErrorMessages.GenericApiError);
 		}
 	}
 }

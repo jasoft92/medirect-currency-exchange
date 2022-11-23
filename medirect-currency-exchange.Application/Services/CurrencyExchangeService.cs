@@ -72,21 +72,21 @@ namespace medirect_currency_exchange.Application.Services
 
 			if (customer == null)
 			{
-				return LogAndReturnError(HttpStatusCode.BadRequest, "Customer does not exist");
+				return LogAndReturnError(HttpStatusCode.BadRequest, ValidationErrorMessages.CustomerDoesNotExist);
 			}
 
 			if (customerWallet == null)
 			{
-				return LogAndReturnError(HttpStatusCode.BadRequest, $"Invalid Request. Client does not have an account with {exchangeRequestDto.SourceCurrency} currency");
+				return LogAndReturnError(HttpStatusCode.BadRequest, string.Format(ValidationErrorMessages.CurrencyAccountNotFound, exchangeRequestDto.SourceCurrency));
 			}
 
 			if (customerWallet.Amount < exchangeRequestDto.ExchangeAmount)
 			{
-				return LogAndReturnError(HttpStatusCode.UnprocessableEntity, $"Client has insufficient funds in his {exchangeRequestDto.SourceCurrency} account to perform the requested exchange");
+				return LogAndReturnError(HttpStatusCode.UnprocessableEntity, string.Format(ValidationErrorMessages.InsufficientFunds, exchangeRequestDto.SourceCurrency));
 			}
 
 			var recentExchangeTrades = await _currencyExchangeRepository.GetRecentCurrencyExchangeTransactions(exchangeRequestDto.CustomerId);
-			return recentExchangeTrades.Count >= 10 ? LogAndReturnError(HttpStatusCode.UnprocessableEntity, "Client exceeded maximum allowed exchange trades per hour") : null;
+			return recentExchangeTrades.Count >= 10 ? LogAndReturnError(HttpStatusCode.UnprocessableEntity, ValidationErrorMessages.CustomerExceededHourlyTradeLimit) : null;
 		}
 
 		private ErrorResponseDto? LogAndReturnError(HttpStatusCode statusCode, string errorMessage)
